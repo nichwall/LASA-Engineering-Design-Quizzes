@@ -18,99 +18,98 @@ import copy
 from collections import OrderedDict
 
 import urllib2
-import xml.etree.ElementTree as ET
+
+### BEGIN CONFIG
+
 
 # Titles of the quizzes
-quizTitles = ["Basic Shop Safety",	# Quiz 1
-			  "Hand Tools",			# Quiz 2
-			  "Basic Power Tools",	# Quiz 3
-			  "Metalworking",		# Quiz 4
-			  "Advanced Power Tools", # Quiz 5
-			  "Electrical"]			# Quiz 6
+quizTitles = ["Basic Shop Safety","Hand Tools","Basic Power Tools","Metalworking","Advanced Power Tools","Electrical"]
 
 # Number of questions in the quiz
 quizLengths = [15,15,20,8,9,10]
 
 # Variable to control the quizzes.
-quizDatas = """Quiz Number	Question Number	Question Text	Correct Answer	Incorrect Answers
-1	1	How do you conserve materials?	All of the above.	Use scrap wood.	Measure twice and cut once.	Don't cut in the middle of the wood.
-1	2	Which of the following is NOT appropriate to wear in the shop?	Flip flops	Shorts	A t-shirt	Close-toed shoes
-1	3	What must ALWAYS be worn while in the shop?	Safety goggles	Ear plugs	Masks	Long pants
-1	4	When cleaning up the shop, which of the following should be done first?	Pick up scraps of wood that are reusable.	Sweep off machines.	Grab a broom.	Sweep up dust.
-1	5	You should avoid the shop if:	You are injured or feeling sick.	You have other homework to do.	You don't feel like working!	You don't like the other members in your group.
-1	6	You should tighten clamps until:	You can't move the wood around anymore.	You have made 35 rotations.	You leave a dent in the wood.	The top touches the wood.
-1	7	Why should you be in the shop?	To work.	To have fun.	To see what other people are doing.	To talk to friends.
-1	8	When cutting wood:	Always have it clamped down.	Cut against the grain.	Start in the middle.	Toss out all the leftovers.
-1	9	Why would you wear a mask?	You have breathing issues.	For funsies, duh!	To protect your chin.	It's Halloween.
-1	10	Why is it important to keep the shop clean?	All of the above.	Sawdust is bad to inhale.	It keeps tools in working order.	Debris in the shop is hazardous.
-1	11	True or false: hair longer than shoulder length should be pulled back.	True.	False.
-1	12	If you have a long sleeved shirt:	Roll up your sleeves.	Just make sure it's not too loose.	You can't enter the shop.	Don't worry about it.
-1	13	True or false: high heels are allowed in the shop if they cover your toes.	False	True
-1	14	Which step of shop cleaning happens last?	Getting a broom and cleaning up the sawdust.	Putting tools away.	Turning off machines.	Putting scraps away.
-1	15	What is the proper sweeping technique?	Sweep towards user in a circular motion.	Sweep only where dust is visible.	Sweep debris into the corners.	Walk in a long line around the shop.
-2	1	What is a coping saw used for?	To cut intricate internal cutouts and external shapes out of thin materials.	To cut with the grain of a piece of wood.	To cut across the grain of the wood.	To cut out large simple shapes.
-2	2	What do you do if your screwdriver strips the screw?	Remove the stripped screw, get a new one, find a slightly larger screwdriver, and try again.	Use a hammer and force the screw in.	Reset the screwdriver and try again.	Remove stripped screw, get a new one, and try again.
-2	3	What is the difference between a mallet and a hammer?	A mallet has a softer blow.	A hammer has a softer blow.	Hammers are used to cut materials.	Mallets usually have a sharp edge.
-2	4	What material can you cut with a Hacksaw?	All of the above	Metal	Wood	Plastic
-2	5	The purpose of sandpaper is to...	Smooth rough edges on a piece of wood.	Create designs in wood.	Smooth rough edges on a piece of wood or metal.	Clean your workplace.
-2	6	True or false: chisels should be used with the grain.	True	False
-2	7	What is the difference between a file and a chisel?	A file is used to cut fine amounts of material from a workpiece, while a chisel is used for carving a hard material such as wood, stone, or metal.	A chisel is used to cut fine amounts of material from a workpiece, while a file is used for carving a hard material such as wood, stone, or metal.	Both are used to cut materials.	Both are used to carve.
-2	8	Wood glue can be used to...	Glue together two pieces of wood.	Fill in holes in your piece of wood.	Glue another material to wood.	Eat.
-2	9	What tool do you use to cut across wood grain?	A Crosscut Saw.	A Rip Saw.	A Coping Saw.	A Hacksaw.
-2	10	What is something that must be used if you are working with a hammer?	Clamps	Saw	Screw	Glue
-2	11	What is the first step in drilling a hole in a piece of wood?	Clamp down drilled piece of wood and scrap to prevent the drill from going into the table.	Drill a hole using the needed drill bit size.	Drill a pilot hole in the piece of wood.	Glue wood to table to prevent movement.
-2	12	How do you cut with a rip saw?	With the grain of the wood.	Across the grain of the wood.	In small intricate cuts.	Diagonally across the grain of the wood.
-2	13	True or false: you are always supposed to pull a file against wood.	False	True
-2	14	True or false: screws tighten counterclockwise.	False	True
-2	15	You want to smooth fine amounts from the corner of a piece of wood. Which tool do you use?	File	Chisel	Hammer	Coping Saw
-3	1	When using a drill press, should the object being drilled be clamped down?	Yes.	No.	Only if the object is larger than the platform.	Only if the object is smaller than the platform.
-3	2	When using a bandsaw, you should...	Use a push stick and keep your fingers away from the blade.	Cut large or oversized pieces unassisted.	Cut the piece quickly! People are getting impatient!	Clean off your area after you finish each cut.
-3	3	What is one instance in which you should NOT use a scroll saw?	When making straight cuts.	Cutting out small pieces.	When the piece is awkward to manage (example: cutting a star shape from a small piece of wood).	When the piece needs to have small curves.
-3	4	After using a hot glue gun...	All of the above.	Clean up any hot glue that dripped.	Allow the glue gun to cool.	Store the glue gun away from flammable objects.
-3	5	While using a bandsaw, do NOT...	Stop paying to your surroundings and the machine.	Use a push stick.	Keep the blade guard 1/2” above the piece being cut.	Mark where you will be accounting, while also taking into account the width of the blade.
-3	6	True or false: when using a handheld electrical drill, you should always mark the center hole.	True, because it works well as a guide.	True, so that you can show off your skills to your adoring audience.	False, because some drill bits (e.g. paddle bits) don’t have a center part.	False, you only need to mark the outer edges.
-3	7	True or false: handheld sanders aren’t dangerous.	False. The residue from sanders can cause lacerations and abrasions if it comes into contact with skin, and creates fine sawdust that can irritate the lungs.	True. Sanders don’t have sharp edges and therefore can’t cut people.	True. All they do is sand wood, not cut it.	False. The sawdust and woodchips it creates can be hazardous.
-3	8	What would you use a hot glue gun for?	To quickly create strong joints and connections.	For permanents joints.	For heat resistant materials.	For objects that will undergo heavy use.
-3	9	What type of cut should be performed with a bandsaw?	Long cuts, large curved cuts, and cuts in large pieces of wood and metal.	Small, intricate cuts that curve.	Cicular cuts in thick boards or plywood.	Cutting 90 degree angles.
+quizDatas = """Quiz Number	Question Number	Question	Correct Answer	Incorrect 1	Incorrect 2	Incorrect 3	Incorrect 4
+1	1	How do you conserve materials>	All of the above.	Use scrap wood.	Measure twice and cut once.	Don't cut in the middle of the wood.	
+1	2	Which of the following is NOT appropriate to wear in the shop?	Flip flops	Shorts	A t-shirt	Close-toed shoes	
+1	3	What must ALWAYS be worn while in the shop?	Safety goggles	Ear plugs	Masks	Long pants	
+1	4	When cleaning up the shop, which of the following should be done first?	Pick up scraps of wood that are reusable.	Sweep off machines.	Grab a broom.	Sweep up dust.	
+1	5	You should avoid the shop if:	You are injured or feeling sick.	You have other homework to do.	You don't feel like working!	You don't like the other members in your group.	
+1	6	You should tighten clamps until:	You can't move the wood around anymore.	You have made 35 rotations.	You leave a dent in the wood.	The top touches the wood.	
+1	7	Why should you be in the shop?	To work.	To have fun.	To see what other people are doing.	To talk to friends.	
+1	8	When cutting wood:	Always have it clamped down.	Cut against the grain.	Start in the middle.	Toss out all the leftovers.	
+1	9	Why would you wear a mask?	You have breathing issues.	For funsies, duh!	To protect your chin.	It's Halloween.	
+1	10	Why is it important to keep the shop clean?	All of the above.	Sawdust is bad to inhale.	It keeps tools in working order.	Debris in the shop is hazardous.	
+1	11	True or false: hair longer than shoulder length should be pulled back.	True.	False.			
+1	12	If you have a long sleeved shirt:	Roll up your sleeves.	Just make sure it's not too loose.	You can't enter the shop.	Don't worry about it.	
+1	13	True or false: high heels are allowed in the shop if they cover your toes.	False	True			
+1	14	Which step of shop cleaning happens last? Getting a broom and cleaning up the sawdust.	Putting tools away.	Turning off machines.	Putting scraps away.		
+1	15	What is the proper sweeping technique?	Sweep towards user in a circular motion.	Sweep only where dust is visible.	Sweep debris into the corners.	Walk in a long line around the shop.	
+2	1	What is a coping saw used for?	To cut intricate internal cutouts and external shapes out of thin materials.	To cut with the grain of a piece of wood.	To cut across the grain of the wood.	To cut out large simple shapes.	
+2	2	What do you do if your screwdriver strips the screw?	Remove the stripped screw, get a new one, find a slightly larger screwdriver, and try again.	Use a hammer and force the screw in.	Reset the screwdriver and try again.	Remove stripped screw, get a new one, and try again.	
+2	3	What is the difference between a mallet and a hammer?	A mallet has a softer blow.	A hammer has a softer blow.	Hammers are used to cut materials.	Mallets usually have a sharp edge.	
+2	4	What material can you cut with a Hacksaw?	All of the above	Metal	Wood	Plastic	
+2	5	The purpose of sandpaper is to...	Smooth rough edges on a piece of wood.	Create designs in wood.	Smooth rough edges on a piece of wood or metal.	Clean your workplace.	
+2	6	True or false: chisels should be used with the grain.	True	False			
+2	7	What is the difference between a file and a chisel?	A file is used to cut fine amounts of material from a workpiece, while a chisel is used for carving a hard material such as wood, stone, or metal.	A chisel is used to cut fine amounts of material from a workpiece, while a file is used for carving a hard material such as wood, stone, or metal.	Both are used to cut materials.	Both are used to carve.	
+2	8	Wood glue can be used to...	Glue together two pieces of wood.	Fill in holes in your piece of wood.	Glue another material to wood.	Eat.	
+2	9	What tool do you use to cut across wood grain?	A Crosscut Saw.	A Rip Saw.	A Coping Saw.	A Hacksaw.	
+2	10	What is something that must be used if you are working with a hammer?	Clamps	Saw	Screw	Glue	
+2	11	What is the first step in drilling a hole in a piece of wood?	Clamp down drilled piece of wood and scrap to prevent the drill from going into the table.	Drill a hole using the needed drill bit size.	Drill a pilot hole in the piece of wood.	Glue wood to table to prevent movement.	
+2	12	How do you cut with a rip saw?	With the grain of the wood.	Across the grain of the wood.	In small intricate cuts.	Diagonally across the grain of the wood.	
+2	13	True or false: you are always supposed to pull a file against wood.	False	True			
+2	14	True or false: screws tighten counterclockwise.	False	True			
+2	15	You want to smooth fine amounts from the corner of a piece of wood. Which tool do you use?	File	Chisel	Hammer	Coping Saw	
+3	1	When using a drill press, should the object being drilled be clamped down?	Yes.	No.	Only if the object is larger than the platform.	Only if the object is smaller than the platform.	
+3	2	When using a bandsaw, you should...	Use a push stick and keep your fingers away from the blade.	Cut large or oversized pieces unassisted.	Cut the piece quickly! People are getting impatient!	Clean off your area after you finish each cut.	
+3	3	What is one instance in which you should NOT use a scroll saw?	When making straight cuts.	Cutting out small pieces.	When the piece is awkward to manage (example: cutting a star shape from a small piece of wood).	When the piece needs to have small curves.	
+3	4	After using a hot glue gun...	All of the above.	Clean up any hot glue that dripped.	Allow the glue gun to cool.	Store the glue gun away from flammable objects.	
+3	5	While using a bandsaw, do NOT...	Stop paying to your surroundings and the machine.	Use a push stick.	Keep the blade guard 1/2” above the piece being cut.	Mark where you will be accounting, while also taking into account the width of the blade.	
+3	6	True or false: when using a handheld electrical drill, you should always mark the center hole.	True, because it works well as a guide.	True, so that you can show off your skills to your adoring audience.	False, because some drill bits (e.g. paddle bits) don’t have a center part.	False, you only need to mark the outer edges.	
+3	7	True or false: handheld sanders aren’t dangerous.	False. The residue from sanders can cause lacerations and abrasions if it comes into contact with skin, and creates fine sawdust that can irritate the lungs.	True. Sanders don’t have sharp edges and therefore can’t cut people.	True. All they do is sand wood, not cut it.	False. The sawdust and woodchips it creates can be hazardous.	
+3	8	What would you use a hot glue gun for?	To quickly create strong joints and connections.	For permanents joints.	For heat resistant materials.	For objects that will undergo heavy use.	
+3	9	What type of cut should be performed with a bandsaw?	Long cuts, large curved cuts, and cuts in large pieces of wood and metal.	Small, intricate cuts that curve.	Cicular cuts in thick boards or plywood.	Cutting 90 degree angles.	
 3	10	Which part of the drill press is the chuck and what is its purpose?	The chuck is the part that holds the drill press in place while drilling, requiring it to spin with the mechanism and drill a hole.		The chuck is the part of the drill press that allows the material to be securely clamped to the table.	The chuck allows the drill press operator to control to which depth into the material the machine will drill.	The chuck is the part of the drill press that holds the hand feed lever in place, preventing unwanted rotation while the drill is being used.
-3	11	What type of cut would you use a scroll saw for?	Small intricate cuts, including 90 degree angles.	Large cuts through thick pieces of wood.	Cutting pieces of metal, such as steel.	Cutting long pieces of wood.
-3	12	When using a Miter Saw, what should you do?	Hold the piece of material tightly to the backboard, make sure the blade and material are lined up, and only pull the trigger when you're ready to make the cut.	Grip the piece you're cutting within 5 inches of the blade.	Move the piece of wood while you're cutting.	Pull the trigger to check to see if the saw is working.
-3	13	What should you do if a bandsaw has a damaged band?	Ask the instructor to replace the band.	Attempt to replace the band by yourself.	Do not inform anyone and find another machine to use.	Try to use the band saw with the damaged band.
-3	14	You want to cut an intricate shape out of wood with the Scroll Saw. What should you do?	Mark the piece, place the guards down, and carefully move the wood through the blade, keeping your hands a safe distance away.	Mark the piece, and begin cutting on the Scroll Saw, keeping your hands close to the blade.	Place the Scroll Saw guards down on the wood, and begin cutting.	Mark the piece, place the guards down, and carefully move the wood through the blade, either straight through or sideways on the blade.
-3	15	Why would you use a handheld sander?	To quickly sand down a large area of wood.	To sand small, handheld parts.	To start a fire using friction.	To cut a piece of wood.
-3	16	What are miter saws best suited for?	Making large cuts on wood.	Making intricate cuts on stone.	Cutting solid steel blocks in half.	Sanding down small areas.
-3	17	Why should the paper for the handheld sander be changed periodically?	To ensure it stays effective at sanding.	To protect the sander.	To keep it from sticking to the sander.	To prevent it from overheating.
-3	18	What is the purpose of a jig saw?	To cut pieces that are otherwise too unwieldy to cut into sheets of wood or metal.	To cut intricate shapes out of a certain material.	To make straight cuts.	To  make rounded cuts.
-3	19	What is the first step for using a jig saw?	Clamp down your piece of metal or wood.	Set the guard on the jig saw.	Turn on the jig saw.	No other steps required, just make your cut!
-3	20	What can you cut with a jig saw?	Metal and wood.	Metal only.	Wood only.	Metal, wood, and plastic.
-4	1	What is a belt sander used for?	Sanding larger handheld objects quickly.	Cutting through a solid block of wood.	Creating piles of sawdust.	Launching wood across the shop.
-4	2	You want to cut a piece of wood with the panel saw. What should you NOT do?	Hold the wood with one hand while cutting.	Place the wood on the saw rails.	Hold onto the saw with both hands.	Put the saw back in place after finishing the cut.
-4	3	You want to use the belt sander but there’s a rip in the belt. What should you do?	Step away from the machine immediately and get the attention of your teacher.	Use it anyways. If it ain’t broke, don’t fix it!	When the piece is awkward to manage (example: cutting a star shape from a small piece of wood).	When the piece needs to have small curves.
-4	4	What is the purpose of the Panel saw?	To make large straight cuts in wood.	To smooth down the edges of a piece of wood.	To cut small, sharp curves in wood.	To cut thick pieces of wood.
-4	5	You want to cut something with the Panel saw. How do you do that?	Mark where you want to cut, place the wood on the rails, and pull the saw down with both hands.	Hold the piece of wood with one arm and pull down the saw with your other arm.	Mark where you want to cut, place the wood on the rails, and pull the saw with one hand while writing in your logbook with the other.	Have a partner hold the piece of wood while you pull the saw down with both hands.
-4	6	What should be used to safely sand a very small piece on the belt sander?	Clamp	Gloves	Another piece of wood	The handle of any hand tool
-4	7	Someone is using the Belt Sander, but you just have to quickly sand a small piece of wood. What should you do?	Wait for the other person to finish, then use a clamp to hold onto the small piece of wood while you sand.	Wait for the other person to finish, and then sand the small piece of wood with your hands.	Just walk up to their side and use the Belt Sander at the same time.	Turn off the Belt Sander while they're using it, and demand that you get to use it because you're just going to use it for a second.
-4	8	The Panel Saw is loud, you should...	Wear ear protection.	Attempt to cover your ears with your hands as you pull the saw down.	Neglect your ears.	Try to operate the machine quickly and in a slapdash manner in order to minimize damage to your ears.
-5	1	An angle grinder is used to cut or grind...	Smaller metal objects.	Blocks of wood.	Solid steel blocks.	People.
-5	2	Chop saws are used to cut...	Metal bars or rods.	Metal sheets.	Wood.	Plastics.
-5	3	Timmy is about to drill a hole in a piece of metal, and his buddy Samantha tells him he doesn't need to clamp it down. Should Timmy listen to Samantha?	No!	Yes!		
-5	4	What volt socket should you plug a Grinder into?	120 volts.	80 volts.	69 volts.	60 volts.
-5	5	You should always pre drill a hole for 	All of the the above.	Rivets.	Bolts.	Screws.
-5	6	If you see sparks coming off of an abrasive chop saw you should...	Not panic, its totally normal.	Place something over the saw, can't let those sparks get lose!	Shut off the saw immediately- something is wrong.	Panic and run from the saw.
-5	7	What should you place over a hole when putting a screw in?	A washer.	A nail.	Plastic wrap.	Nothing.
-5	8	When using the chop saw all of the following protective gear should be worn EXCEPT for:	A breathing mask.	Hearing protection.	Gloves.	You don’t need protection when using a chop saw.
-5	9	When using the angle grinder, which of the following should you do?	Be prepared for abrasive vibration from the device.	Turn it off if sparks are released.	Use only one hand.	Make the cut as quickly as possible.
-6	1	How many tools and materials are required to make a good solder connection?	5.	2.	3.	4.
-6	2	How many tools are required to make a good crimped connection?	3.	1.	2.	4.
-6	3	Fill in the blanks: After cutting and stripping your piece of wire correctly, how do you proceed if you want to create a solder joint? Once the tip of the soldering iron is hot, ________. Next you need to _____ the tip. Hold the soldering iron _____ and a long piece of solder ______. Place the soldering iron on the _____ of the wire and let the wire heat up. After a few seconds apply the solder, first to the tip of the soldering iron to create a heat bridge and then to the _________ of the joint and move the solder along the joint until it is completely covered in solder. Be careful not to create a ______. The joint should be smooth and shiny. If it is _____ and ____ it is a _____ joint. If it is a solid joint,_______ the cooled joint in _______.	Wipe the tip on the damp sponge to remove any remaining residue. Tin. In your dominant hand... in the other. Underside. On the top side. Blob. A blob... not shiny... a cold. Wrap...electrical tape.	Apply solder to the iron. Clean the tip. In your dominant hand... in the other. Underside. On the top side. Blob. A blob... not shiny... a cold. Wrap...electrical tape.	Turn off the soldering iron. Wipe the tip on the sponge. In your dominant hand... in the other. Underside. On the top side. Blob. A blob... not shiny... a cold. Wrap...electrical tape.	Wipe the tip on the damp sponge to remove any remaining residue. Tin. In your dominant hand... in the other. Underside. On the top side. Blob. A blob... not shiny... a cold. Wrap...heatshrink.
-6	4	After cutting and stripping your piece of wire correctly, how do you proceed if you want to create a crimped connection?	Place the connector (fork, circle) onto the stripped wire.	Grab the crimpers.	Solder the end.
-6	5	What is the purpose of soldering?	To create a conductive connection between two wires.	Soldering has no use- it’s a totally aesthetic operation.	To add connectors.
-6	6	True or false: when stripping wire, place the wire ¼-½ inches into the wire stripper’s head.	True.	False.
-6	7	True or false: wire crimpers are used to add connections onto wires.	True.	False.
-6	8	True/False: After placing your wire into your pin holder on the 25 pin connector, you should have an inch of uninsulated wire on the outside.	False.	True.
-6	9	True/False: The purpose of the Wire Strippers is to remove the insulation from the wire.	True.	False.
-6	10	A multimeter can perform the tasks of the ______, _______, and _______.	Voltmeter, ammeter, ohmmeter.	Voltmeter, resistance meter, electricity meter.	Voltmeter, current meter.	Amperage meter, voltmeter, ohmmeter.
+3	11	What type of cut would you use a scroll saw for?	Small intricate cuts, including 90 degree angles.	Large cuts through thick pieces of wood.	Cutting pieces of metal, such as steel.	Cutting long pieces of wood.	
+3	12	When using a Miter Saw, what should you do?	Hold the piece of material tightly to the backboard, make sure the blade and material are lined up, and only pull the trigger when you're ready to make the cut.	Grip the piece you're cutting within 5 inches of the blade.	Move the piece of wood while you're cutting.	Pull the trigger to check to see if the saw is working.	
+3	13	What should you do if a bandsaw has a damaged band?	Ask the instructor to replace the band.	Attempt to replace the band by yourself.	Do not inform anyone and find another machine to use.	Try to use the band saw with the damaged band.	
+3	14	You want to cut an intricate shape out of wood with the Scroll Saw. What should you do?	Mark the piece, place the guards down, and carefully move the wood through the blade, keeping your hands a safe distance away.	Mark the piece, and begin cutting on the Scroll Saw, keeping your hands close to the blade.	Place the Scroll Saw guards down on the wood, and begin cutting.	Mark the piece, place the guards down, and carefully move the wood through the blade, either straight through or sideways on the blade.	
+3	15	Why would you use a handheld sander?	To quickly sand down a large area of wood.	To sand small, handheld parts.	To start a fire using friction.	To cut a piece of wood.	
+3	16	What are miter saws best suited for?	Making large cuts on wood.	Making intricate cuts on stone.	Cutting solid steel blocks in half.	Sanding down small areas.	
+3	17	Why should the paper for the handheld sander be changed periodically?	To ensure it stays effective at sanding.	To protect the sander.	To keep it from sticking to the sander.	To prevent it from overheating.	
+3	18	What is the purpose of a jig saw?	To cut pieces that are otherwise too unwieldy to cut into sheets of wood or metal.	To cut intricate shapes out of a certain material.	To make straight cuts.	To  make rounded cuts.	
+3	19	What is the first step for using a jig saw?	Clamp down your piece of metal or wood.	Set the guard on the jig saw.	Turn on the jig saw.	No other steps required, just make your cut!	
+3	20	What can you cut with a jig saw?	Metal and wood.	Metal only.	Wood only.	Metal, wood, and plastic.	
+4	1	What is a belt sander used for?	Sanding larger handheld objects quickly.	Cutting through a solid block of wood.	Creating piles of sawdust.	Launching wood across the shop.	
+4	2	You want to cut a piece of wood with the panel saw. What should you NOT do?	Hold the wood with one hand while cutting.	Place the wood on the saw rails.	Hold onto the saw with both hands.	Put the saw back in place after finishing the cut.	
+4	3	You want to use the belt sander but there’s a rip in the belt. What should you do?	Step away from the machine immediately and get the attention of your teacher.	Use it anyways. If it ain’t broke, don’t fix it!	When the piece is awkward to manage (example: cutting a star shape from a small piece of wood).	When the piece needs to have small curves.	
+4	4	What is the purpose of the Panel saw?	To make large straight cuts in wood.	To smooth down the edges of a piece of wood.	To cut small, sharp curves in wood.	To cut thick pieces of wood.	
+4	5	You want to cut something with the Panel saw. How do you do that?	Mark where you want to cut, place the wood on the rails, and pull the saw down with both hands.	Hold the piece of wood with one arm and pull down the saw with your other arm.	Mark where you want to cut, place the wood on the rails, and pull the saw with one hand while writing in your logbook with the other.	Have a partner hold the piece of wood while you pull the saw down with both hands.	
+4	6	What should be used to safely sand a very small piece on the belt sander?	Clamp	Gloves	Another piece of wood	The handle of any hand tool	
+4	7	Someone is using the Belt Sander, but you just have to quickly sand a small piece of wood. What should you do?	Wait for the other person to finish, then use a clamp to hold onto the small piece of wood while you sand.	Wait for the other person to finish, and then sand the small piece of wood with your hands.	Just walk up to their side and use the Belt Sander at the same time.	Turn off the Belt Sander while they're using it, and demand that you get to use it because you're just going to use it for a second.	
+4	8	The Panel Saw is loud, you should...	Wear ear protection.	Attempt to cover your ears with your hands as you pull the saw down.	Neglect your ears.	Try to operate the machine quickly and in a slapdash manner in order to minimize damage to your ears.	
+5	1	An angle grinder is used to cut or grind...	Smaller metal objects.	Blocks of wood.	Solid steel blocks.	People.	
+5	2	Chop saws are used to cut...	Metal bars or rods.	Metal sheets.	Wood.	Plastics.	
+5	3	Timmy is about to drill a hole in a piece of metal, and his buddy Samantha tells him he doesn't need to clamp it down. Should Timmy listen to Samantha?	No!	Yes!			
+5	4	What volt socket should you plug a Grinder into?	120 volts.	80 volts.	69 volts.	60 volts.	
+5	5	You should always pre drill a hole for 	All of the the above.	Rivets.	Bolts.	Screws.	
+5	6	If you see sparks coming off of an abrasive chop saw you should...	Not panic, its totally normal.	Place something over the saw, can't let those sparks get lose!	Shut off the saw immediately- something is wrong.	Panic and run from the saw.	
+5	7	What should you place over a hole when putting a screw in?	A washer.	A nail.	Plastic wrap.	Nothing.	
+5	8	When using the chop saw all of the following protective gear should be worn EXCEPT for:	A breathing mask.	Hearing protection.	Gloves.	You don’t need protection when using a chop saw.	
+5	9	When using the angle grinder, which of the following should you do?	Be prepared for abrasive vibration from the device.	Turn it off if sparks are released.	Use only one hand.	Make the cut as quickly as possible.	
+6	1	How many tools and materials are required to make a good solder connection?	5	2	3	4	
+6	2	How many tools are required to make a good crimped connection?	3	1	2	4	
+6	3	Fill in the blanks: After cutting and stripping your piece of wire correctly, how do you proceed if you want to create a solder joint? Once the tip of the soldering iron is hot, ________. Next you need to _____ the tip. Hold the soldering iron _____ and a long piece of solder ______. Place the soldering iron on the _____ of the wire and let the wire heat up. After a few seconds apply the solder, first to the tip of the soldering iron to create a heat bridge and then to the _________ of the joint and move the solder along the joint until it is completely covered in solder. Be careful not to create a ______. The joint should be smooth and shiny. If it is _____ and ____ it is a _____ joint. If it is a solid joint,_______ the cooled joint in _______.	Wipe the tip on the damp sponge to remove any remaining residue. Tin. In your dominant hand... in the other. Underside. On the top side. Blob. A blob... not shiny... a cold. Wrap...electrical tape.	Apply solder to the iron. Clean the tip. In your dominant hand... in the other. Underside. On the top side. Blob. A blob... not shiny... a cold. Wrap...electrical tape.	Turn off the soldering iron. Wipe the tip on the sponge. In your dominant hand... in the other. Underside. On the top side. Blob. A blob... not shiny... a cold. Wrap...electrical tape.	Wipe the tip on the damp sponge to remove any remaining residue. Tin. In your dominant hand... in the other. Underside. On the top side. Blob. A blob... not shiny... a cold. Wrap...heatshrink.	
+6	4	After cutting and stripping your piece of wire correctly, how do you proceed if you want to create a crimped connection?	Place the connector (fork, circle) onto the stripped wire.	Grab the crimpers.	Solder the end.		
+6	5	What is the purpose of soldering?	To create a conductive connection between two wires.	Soldering has no use- it’s a totally aesthetic operation.	To add connectors.		
+6	6	True or false: when stripping wire, place the wire ¼-½ inches into the wire stripper’s head.	True.	False.			
+6	7	True or false: wire crimpers are used to add connections onto wires.	True.	False.			
+6	8	True/False: After placing your wire into your pin holder on the 25 pin connector, you should have an inch of uninsulated wire on the outside.	False.	True.			
+6	9	True/False: The purpose of the Wire Strippers is to remove the insulation from the wire.	True.	False.			
+6	10	A multimeter can perform the tasks of the ______, _______, and _______.	Voltmeter, ammeter, ohmmeter.	Voltmeter, resistance meter, electricity meter.	Voltmeter, current meter.	Amperage meter, voltmeter, ohmmeter.	
 """
+
+### END CONFIG
 
 classID_list = ['000000000']
 
