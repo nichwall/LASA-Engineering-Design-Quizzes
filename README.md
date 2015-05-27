@@ -5,7 +5,7 @@ Students have the option of being in a class, and teachers can have up to 6 clas
 Additional CSS work will probably be done as time goes on, but for now this is really nice for keyboard navigation.
 
 TODO:
-Comment code
+Comment code\n
 Clean up dead code (should be done already)
 Add redirects for easier integration with other websites
 Reorganize file tree
