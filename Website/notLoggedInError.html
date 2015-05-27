@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+{% autoescape true %}
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+		<style>
+			.error {color: #FF0000;}
+		</style>
+	</head>
+	<body>
+		<p>Oops. Looks like you tried to do something that required you to be logged in (like creating an account). Please log in if you wish to continue.</p>
+		<p><a href='signinRedirect'>Sign in</a></p>
+		<p><a href='/'>Go Home</a></p>
+	</body>
+</html>
+{% endautoescape %}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+	<question>
+		<text>What color is the sky?</text>
+		<id>1</id>
+		<answerA>Red</answerA>
+		<answerB>Green</answerB>
+		<answerC>Blue</answerC>
+		<answerD>Yellow</answerD>
+		<correctAnswer>Blue</correctAnswer>
+	</question>
+	<question>
+		<text>What day is after Wednesday?</text>
+		<id>2</id>
+		<answerA>Monday</answerA>
+		<answerB>Tuesday</answerB>
+		<answerC>Wednesday</answerC>
+		<answerD>Thursday</answerD>
+		<correctAnswer>Thursday</correctAnswer>
+	</question>
+	<question>
+		<text>True</text>
+		<id>3</id>
+		<answerA>True</answerA>
+		<answerB>False</answerB>
+		<correctAnswer>True</correctAnswer>
+	</question>
+	<question>
+		<text>CMYK</text>
+		<id>4</id>
+		<answerA>Cyan</answerA>
+		<answerB>Magenta</answerB>
+		<answerC>Yellow</answerC>
+		<answerD>Black</answerD>
+		<correctAnswer>Cyan</correctAnswer>
+	</question>
+</quiz>

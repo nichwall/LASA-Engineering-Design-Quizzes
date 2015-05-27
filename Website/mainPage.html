@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/table.css">
+</head>
+
+<body>
+	{% if loggedIn %}
+		<p>User logged in! {{userName}}</p>
+		{% if isTeacher %}
+			<p>Is Teacher!</p>
+			{% for c in classes %}
+				{% if c.isClass %}
+				<table>
+					<tr>
+						<th>Class:</th><td><b>{{c.title}}</b></td>
+						<th>
+								<form action="/removeClass" method="post">
+									<hidden type="text" name="classID" value="{{c.id}}">
+									<input type="submit" value="Remove Class">
+								</form>
+						</th>
+					</tr><tr>
+						<th>ID:</th><td><b>{{c.id}}</b></td>
+					</tr>
+				</table><table>
+					<tr>
+						<th>Student Name</th>
+						<th>Quiz 1</th>
+						<th>Quiz 2</th>
+						<th>Quiz 3</th>
+						<th>Quiz 4</th>
+						<th>Quiz 5</th>
+						<th>Quiz 6</th>
+					</tr>
+					{% for s in c.students %}
+						<tr>
+						<td>{{s.name}}</td>
+						<td>{{s.q1}}</td>
+						<td>{{s.q2}}</td>
+						<td>{{s.q3}}</td>
+						<td>{{s.q4}}</td>
+						<td>{{s.q5}}</td>
+						<td>{{s.q6}}</td>
+						</tr>
+					{% endfor %}
+				</table>
+				{% else %}
+					<form action="/createTeacher" method="get">
+						<input type="submit" value="New Class">
+					</form>
+				{% endif %}
+				<br>
+			{% endfor %}
+			<br><br>
+		{% else %}
+			{% if isStudent %}
+				<p>Is student!</p>				
+			{% else %}
+				<p>Not student or teacher!</p>
+				<p><a href='/studentCreate'>Sign up as Student</a></p>
+				<p><a href='/teacherCreate'>Sign up as Teacher</a></p>
+			{% endif %}
+		{% endif %}
+	{% else %}
+		<p>User not logged in. In order to save you grades on the quizzes, you'll need to have a Google Mail account. If you want to log in, <a href='/signinRedirect'>sign in here</a>. Otherwise, just take a quiz below.</p>
+	{% endif %}
+	<table>
+		<tr>
+			<th>Quiz Number</th>
+			<th>Quiz</th>
+			<th>Highest Score</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td><a href='/quiz1'>Basic Shop Safety</a></td>
+			<td>{{ q1 }}</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td><a href='/quiz2'>Hand Tools</a></td>
+			<td>{{ q2 }}</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td><a href='/quiz3'>Basic Power Tools</a></td>
+			<td>{{ q3 }}</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td><a href='/quiz4'>Metalworking</a></td>
+			<td>{{ q4 }}</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td><a href='/quiz5'>Advanced Power Tools</a></td>
+			<td>{{ q5 }}</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td><a href='/quiz6'>Electrical</a></td>
+			<td>{{ q6 }}</td>
+		</tr>
+	</table>
+</body>
+
+</html>
+{% endautoescape %}

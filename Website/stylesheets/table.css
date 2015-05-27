@@ -1,0 +1,8 @@
+table, td, th {
+	border-spacing: 5px;
+	border: 1px solid purple;
+}
+th {
+	background-color: purple;
+	color: white;
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+<head>
+	<title>Quiz {{quizNum}} Graded</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+</head>
+
+<body>
+<div class="paragraph" style="text-align:left;">
+
+{% if isChecking %}
+			You got {{score.cCount}} out of {{score.qCount}} correct, or {{score.percent}}.<br><br>
+			<table>
+			{% for ans in answers %}
+				<tr>
+					<td>
+						{% if ans.isCorrect %}
+							<img src='https://lh3.googleusercontent.com/-sPu7Ir-QtJI/VWYvXFvA6oI/AAAAAAAAB3g/sEiKXAvnj98/s60-no/sGreenCheck.png'>
+						{% else %}
+							<img src='https://lh5.googleusercontent.com/-pUo3Uz9Mc6E/VWYvXaQ-LTI/AAAAAAAAB3k/L-p12O_yWJs/s60-no/sRedX.png'>
+						{% endif %}
+					</td>
+					<td><b>{{ans.question}}</b></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>You answered: {{ans.userAnswer}}</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>The correct answer was: {{ans.correctAnswer}}</td>
+				</tr>
+			{% endfor %}
+			</table>
+			<a href='/'>Return Home</a>
+			<a href='/redirectToLessons'>Return to lessons</a>
+{% else %}
+			<form action="/quiz{{quizNum}}" method="post" enctype="multipart/form-data">
+				{% for qs in buttonArray %}
+					{{qs.question}}<br>
+					{% if qs.ans1 %}
+					<input type='radio' name='{{qs.questionID}}' value='{{qs.ans1}}'>{{qs.ans1}}<br>
+					{% endif %}
+					{% if qs.ans2 %}
+					<input type='radio' name='{{qs.questionID}}' value='{{qs.ans2}}'>{{qs.ans2}}<br>
+					{% endif %}
+					{% if qs.ans3 %}
+					<input type='radio' name='{{qs.questionID}}' value='{{qs.ans3}}'>{{qs.ans3}}<br>
+					{% endif %}
+					{% if qs.ans4 %}
+					<input type='radio' name='{{qs.questionID}}' value='{{qs.ans4}}'>{{qs.ans4}}<br>
+					{% endif %}
+					{% if qs.ans5 %}
+					<input type='radio' name='{{qs.questionID}}' value='{{qs.ans5}}'>{{qs.ans5}}<br>
+					{% endif %}
+					<br>
+				{% endfor %}
+				<input type="submit" value="Submit Quiz">
+			</form>
+{% endif %}
+</div>
+</body>
+</html>
+
+{% endautoescape %}

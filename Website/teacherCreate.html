@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+		<style>
+			.error {color: #FF0000;}
+		</style>
+	</head>
+	<body>
+		<b>Welcome, {{ userName }}</b><br>
+		<br>
+		<form action="/teacherCreate" method="post">
+			Teacher Name:<input type='text' name='teacherName' value="{{ teacherName }}">
+			 <span class="error">* {{ nameError }}</span><br>
+			Class Name:<input type='text' name='classTitle' value="{{ classTitle }}">
+			 <span class="error">* {{ idError }}</span><br>
+			<input type="submit" value="Submit">
+		</form>
+</html>
+{% endautoescape %}
+
+

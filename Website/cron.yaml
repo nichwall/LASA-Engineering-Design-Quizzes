@@ -1,0 +1,4 @@
+cron:
+  - description: Clean unused people every month
+    url: /cleanup/OAUECQBWP
+    schedule: 1st sunday 00:00
