@@ -15,8 +15,6 @@ Clean up dead code (should be done already)
 
 Add redirects for easier integration with other websites
 
-Reorganize file tree
-
 Add configuration file to allow for easy edits by non-programming teachers
 
 Add instructions

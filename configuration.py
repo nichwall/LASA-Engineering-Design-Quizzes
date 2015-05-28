@@ -34,7 +34,7 @@ curLine = 0
 while appIn[curLine].find("###") == -1:
 	outStr += appIn[curLine] + "\n"
 	curLine+=1
-outStr += "### BEGIN CONFIG\n\n"
+outStr += "### BEGIN CONFIG\n"
 
 # Rename quizzes
 outStr += '\n# Titles of the quizzes\nquizTitles = ['
